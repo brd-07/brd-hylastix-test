@@ -8,28 +8,33 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
-      - name: Terraform Init
-        working-directory: terraform
-        run: terraform init -upgrade
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Set Azure Credentials
+        run: |
+          echo "${{ secrets.AZURE_CREDENTIALS }}" > azure_credentials.json
+          echo "ARM_CLIENT_ID=${{ fromJSON(secrets.AZURE_CREDENTIALS).clientId }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=${{ fromJSON(secrets.AZURE_CREDENTIALS).clientSecret }}" >> $GITHUB_ENV
+          echo "ARM_TENANT_ID=${{ fromJSON(secrets.AZURE_CREDENTIALS).tenantId }}" >> $GITHUB_ENV
+      - name: Azure Login
+        run: az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
         env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ fromJSON(secrets.AZURE_CREDENTIALS).clientId }}
+          ARM_CLIENT_SECRET: ${{ fromJSON(secrets.AZURE_CREDENTIALS).clientSecret }}
+          ARM_TENANT_ID: ${{ fromJSON(secrets.AZURE_CREDENTIALS).tenantId }}
+      - name: Terraform Init
+        run: terraform init -upgrade
+        working-directory: terraform
       - name: Terraform Plan
+        run: terraform plan -out=tfplan
         working-directory: terraform
-        run: terraform plan -out=plan.tfplan
       - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
         working-directory: terraform
-        run: terraform apply plan.tfplan
-      - name: Get VM IP
-        id: vm-ip
+      - name: Get IP
+        id: ip
+        run: echo "ip=$(terraform output -raw public_ip)" >> $GITHUB_OUTPUT
         working-directory: terraform
-        run: echo "VM_IP=$(terraform output -raw public_ip)" >> $GITHUB_OUTPUT
 
   ansible:
     needs: terraform
