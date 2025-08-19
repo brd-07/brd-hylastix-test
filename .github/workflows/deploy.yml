@@ -37,7 +37,7 @@ jobs:
   #       working-directory: terraform
 
   ansible:
-    needs: terraform
+    # needs: terraform
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
