@@ -3,21 +3,21 @@ services:
   postgres:
     image: postgres:16
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password  # Change in prod
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     volumes:
       - pgdata:/var/lib/postgresql/data
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.2
     environment:
-      KC_DB: postgres
+	    KC_DB: $KC_DB
       KC_DB_URL: jdbc:postgresql://postgres/keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: password
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB_USERNAME: $KC_DB_USERNAME
+      KC_DB_PASSWORD: $KC_DB_PASSWORD
+      KEYCLOAK_ADMIN: $KEYCLOAK_ADMIN
+      KEYCLOAK_ADMIN_PASSWORD: $KEYCLOAK_ADMIN_PASSWORD
       KC_HTTP_ENABLED: true
     ports:
       - "8080:8080"
@@ -37,10 +37,10 @@ services:
     command:
       - --provider=keycloak-oidc
       - --client-id=nginx-client  ### Configured in Keycloak
-      - --client-secret=O68nO00k6L60tWGng5XT5ERNgFcx6ydS  ### Configured in Keycloak
-      - --redirect-url=http://4.223.108.247/oauth2/callback
-      - --oidc-issuer-url=http://4.223.108.247:8080/realms/webapp
-      - --cookie-secret=oFSyhqPOvsTcT2k4W6a9GzG4LgcDr0Px4GdYak360RA= ### head -c 32 /dev/urandom | base64
+      - --client-secret=${CLIENT_SECRET}  ### Configured in Keycloak
+      - --redirect-url=http://${VM_IP}/oauth2/callback
+      - --oidc-issuer-url=http://${VM_IP}:8080/realms/webapp
+      - --cookie-secret=${COOKIE_SECRET} ### head -c 32 /dev/urandom | base64
       - --cookie-secure=false  ### Since using HTTP
       - --cookie-samesite=lax
       - --email-domain=*
