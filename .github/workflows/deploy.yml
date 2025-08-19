@@ -1,0 +1,44 @@
+name: Deploy and Configure
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Terraform Plan
+        working-directory: terraform
+        run: terraform plan -out=plan.tfplan
+      - name: Terraform Apply
+        working-directory: terraform
+        run: terraform apply plan.tfplan
+      - name: Get VM IP
+        id: vm-ip
+        working-directory: terraform
+        run: echo "VM_IP=$(terraform output -raw public_ip)" >> $GITHUB_OUTPUT
+
+  ansible:
+    needs: terraform
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Ansible
+        run: sudo apt update && sudo apt install ansible -y
+      - name: Update Inventory
+        run: echo "[vm]\n${{ needs.terraform.outputs.VM_IP }} ansible_user=azureuser ansible_ssh_pass=${{ secrets.VM_PASSWORD }}" > ansible/inventory.ini
+      - name: Run Ansible Playbook
+        run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
