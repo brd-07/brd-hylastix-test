@@ -3,14 +3,14 @@
   hosts: vm
   become: yes
   vars:
-    postgres_db: "{{ lookup('env', 'POSTGRES_DB') }}"
-    postgres_user: "{{ lookup('env', 'POSTGRES_USER') }}"
-    postgres_password: "{{ lookup('env', 'POSTGRES_PASSWORD') }}"
-    keycloak_admin_user: "{{ lookup('env', 'KEYCLOAK_ADMIN_USER') }}"
-    keycloak_admin_password: "{{ lookup('env', 'KEYCLOAK_ADMIN_PASSWORD') }}"
-    client_secret: "{{ lookup('env', 'CLIENT_SECRET')}}"
-    cookie_secret: "{{ lookup('env', 'COOKIE_SECRET')}}"
-    vm_ip: "{{ lookup('env', 'VM_IP')}}"
+    postgres_db: "{{ ansible_env.POSTGRES_DB }}"
+    postgres_user: "{{ ansible_env.POSTGRES_USER }}"
+    postgres_password: "{{ ansible_env.POSTGRES_PASSWORD }}"
+    keycloak_admin_user: "{{ ansible_env.KEYCLOAK_ADMIN_USER }}"
+    keycloak_admin_password: "{{ ansible_env.KEYCLOAK_ADMIN_PASSWORD }}"
+    client_secret: "{{ ansible_env.CLIENT_SECRET }}"
+    cookie_secret: "{{ ansible_env.COOKIE_SECRET }}"
+    vm_ip: "{{ ansible_env.VM_IP }}"
   tasks:
     - name: Update apt cache
       apt:
