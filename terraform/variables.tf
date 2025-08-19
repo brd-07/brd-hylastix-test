@@ -1,5 +1,5 @@
 variable "resource_group_name" {
-  default = "brd-hylastix-test-rg"
+  default = "brd-hylastix-test-2025-rg"
 }
 
 variable "location" {
