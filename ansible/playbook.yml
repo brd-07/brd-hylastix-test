@@ -46,11 +46,6 @@
         src: docker-compose.yml
         dest: /home/azureuser/docker-compose.yml
 
-    - name: Copy Nginx config
-      copy:
-        src: nginx.conf
-        dest: /home/azureuser/nginx.conf
-
     - name: Copy static files
       copy:
         src: static/
