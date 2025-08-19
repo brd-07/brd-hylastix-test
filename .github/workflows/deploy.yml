@@ -44,7 +44,7 @@ jobs:
       - name: Install Ansible
         run: sudo apt update && sudo apt install ansible -y
       - name: Update Inventory
-        run: echo "[vm]\n${{ needs.terraform.outputs.ip }} ansible_user=${{ fromJSON(secrets.VM_CREDENTIALS).vmUser }} ansible_ssh_pass=${{ fromJSON(secrets.VM_CREDENTIALS).vmPassword }}" > ansible/inventory.ini
+        run: echo "[vm]\n${{ fromJSON(secrets.ANSIBLE_SECRETS).vmIp }} ansible_user=${{ fromJSON(secrets.VM_CREDENTIALS).vmUser }} ansible_ssh_pass=${{ fromJSON(secrets.VM_CREDENTIALS).vmPassword }}" > ansible/inventory.ini
       - name: Run Ansible Playbook
         run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
         env:
@@ -57,6 +57,6 @@ jobs:
           KC_DB_PASSWORD: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcPassword }}
           KEYCLOAK_ADMIN: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcAdmin }}
           KEYCLOAK_ADMIN_PASSWORD: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcAdminPassword }}
-          VM_IP: ${{ needs.terraform.outputs.ip }}
+          VM_IP: ${{ fromJSON(secrets.ANSIBLE_SECRETS).vmIp }}
           CLIENT_SECRET: ${{ fromJSON(secrets.ANSIBLE_SECRETS).clientSecret }}
           COOKIE_SECRET: ${{ fromJSON(secrets.ANSIBLE_SECRETS).cookieSecret }}
