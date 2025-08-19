@@ -11,7 +11,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.2
     environment:
-	    KC_DB: $KC_DB
+	  KC_DB: $KC_DB
       KC_DB_URL: jdbc:postgresql://postgres/keycloak
       KC_DB_USERNAME: $KC_DB_USERNAME
       KC_DB_PASSWORD: $KC_DB_PASSWORD
