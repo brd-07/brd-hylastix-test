@@ -8,7 +8,6 @@ services:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     volumes:
       - pgdata:/var/lib/postgresql/data
-
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.2
     environment:
@@ -24,14 +23,12 @@ services:
     depends_on:
       - postgres
     command: start-dev
-
   nginx:
     image: nginx:1.27
     volumes:
       - ./static:/usr/share/nginx/html:ro
     expose:
       - "80"
-
   oauth2-proxy:
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.12.0
     command:
@@ -51,6 +48,5 @@ services:
     depends_on:
       - nginx
       - keycloak
-
 volumes:
   pgdata:
