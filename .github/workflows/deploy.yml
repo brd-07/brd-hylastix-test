@@ -43,6 +43,10 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install Ansible
         run: sudo apt update && sudo apt install ansible -y
+      - name: Add host key to known_hosts
+        run: |
+          ssh-keyscan -H 4.225.169.223 >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
       - name: Update Inventory
         run: echo -e "[vm]\n4.225.169.223 ansible_user=${{ fromJSON(secrets.VM_CREDENTIALS).vmUser }} ansible_ssh_pass=${{ fromJSON(secrets.VM_CREDENTIALS).vmPassword }}" > ansible/inventory.ini
         env:
