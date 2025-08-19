@@ -49,7 +49,7 @@ jobs:
           VM_IP: ${{ vars.VM_IP }}
       - name: Write .env
         run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
+          echo -e "${{ secrets.ENV_FILE }}" > ansible/.env
       - name: Run Ansible Playbook
         run: |
           export ANSIBLE_HOST_KEY_CHECKING=False
