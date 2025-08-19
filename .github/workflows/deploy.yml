@@ -23,7 +23,7 @@ jobs:
           ARM_CLIENT_SECRET: ${{ fromJSON(secrets.AZURE_CREDENTIALS).clientSecret }}
           ARM_TENANT_ID: ${{ fromJSON(secrets.AZURE_CREDENTIALS).tenantId }}
       - name: Terraform Init
-        run: terraform init -upgrade
+        run: terraform init
         working-directory: terraform
       - name: Terraform Plan
         run: terraform plan -out=tfplan
