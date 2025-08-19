@@ -11,7 +11,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.2
     environment:
-      KC_DB: $POSTGRES_DB
+      KC_DB: $KC_DB
       KC_DB_URL: jdbc:postgresql://postgres/keycloak
       KC_DB_USERNAME: $POSTGRES_USER
       KC_DB_PASSWORD: $POSTGRES_PASSWORD
@@ -37,12 +37,12 @@ services:
       COOKIE_SECRET: $COOKIE_SECRET
     command:
       - --provider=keycloak-oidc
-      - --client-id=nginx-client  ### Configured in Keycloak
-      - --client-secret=${CLIENT_SECRET}  ### Configured in Keycloak
+      - --client-id=nginx-client                                ### Configured in KeyCloak
+      - --client-secret=${CLIENT_SECRET}                        ### Configured in KeyCloak
       - --redirect-url=http://${VM_IP}/oauth2/callback
-      - --oidc-issuer-url=http://${VM_IP}:8080/realms/webapp
-      - --cookie-secret=${COOKIE_SECRET} ### head -c 32 /dev/urandom | base64
-      - --cookie-secure=false  ### Since using HTTP
+      - --oidc-issuer-url=http://${VM_IP}:8080/realms/webapp    ### Realm configured in KeyCloak
+      - --cookie-secret=${COOKIE_SECRET}                        ### head -c 32 /dev/urandom | base64
+      - --cookie-secure=false                                   ### Since using HTTP
       - --cookie-samesite=lax
       - --email-domain=*
       - --upstream=http://nginx:80
