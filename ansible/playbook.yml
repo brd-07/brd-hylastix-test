@@ -47,6 +47,11 @@
         src: docker-compose.yml.j2
         dest: /home/azureuser/docker-compose.yml
 
+    - name: Copy .env
+      copy:
+        src: .env
+        dest: /home/azureuser/.env
+
     - name: Copy static files
       copy:
         src: static/

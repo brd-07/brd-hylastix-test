@@ -47,16 +47,10 @@ jobs:
         run: echo -e "[vm]\n4.225.169.223 ansible_user=${{ fromJSON(secrets.VM_CREDENTIALS).vmUser }} ansible_ssh_pass=${{ fromJSON(secrets.VM_CREDENTIALS).vmPassword }}" > ansible/inventory.ini
         env:
           VM_IP: ${{ vars.VM_IP }}
+      - name: Write .env
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
       - name: Run Ansible Playbook
         run: |
           export ANSIBLE_HOST_KEY_CHECKING=False
-          ansible-playbook -i ansible/inventory.ini ansible/playbook.yml \
-            --extra-vars "postgres_db=${{ secrets.POSTGRES_DB }}" \
-            --extra-vars "postgres_user=${{ secrets.POSTGRES_USER }}" \
-            --extra-vars "postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
-            --extra-vars "keycloak_admin_user=${{ secrets.KEYCLOAK_ADMIN_USER }}" \
-            --extra-vars "keycloak_admin_password=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" \
-            --extra-vars "client_secret=${{ secrets.CLIENT_SECRET }}" \
-            --extra-vars "cookie_secret=${{ secrets.COOKIE_SECRET }}" \
-            --extra-vars "vm_ip=${{ secrets.VM_IP }}" \
-            -v
+          ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
