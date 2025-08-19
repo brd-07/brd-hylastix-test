@@ -14,7 +14,7 @@ jobs:
           terraform_version: 1.5.0
       - name: Terraform Init
         working-directory: terraform
-        run: terraform init
+        run: terraform init -upgrade
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
