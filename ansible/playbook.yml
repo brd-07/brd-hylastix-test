@@ -2,15 +2,7 @@
 - name: Configure Docker and deploy containers
   hosts: vm
   become: yes
-  vars:
-    postgres_db: "{{ ansible_env.POSTGRES_DB }}"
-    postgres_user: "{{ ansible_env.POSTGRES_USER }}"
-    postgres_password: "{{ ansible_env.POSTGRES_PASSWORD }}"
-    keycloak_admin_user: "{{ ansible_env.KEYCLOAK_ADMIN_USER }}"
-    keycloak_admin_password: "{{ ansible_env.KEYCLOAK_ADMIN_PASSWORD }}"
-    client_secret: "{{ ansible_env.CLIENT_SECRET }}"
-    cookie_secret: "{{ ansible_env.COOKIE_SECRET }}"
-    vm_ip: "{{ ansible_env.VM_IP }}"
+
   tasks:
     - name: Update apt cache
       apt:
