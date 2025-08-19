@@ -44,9 +44,9 @@ jobs:
       - name: Install Ansible
         run: sudo apt update && sudo apt install ansible -y
       - name: Update Inventory
-        run: echo "[vm]\n${{ secrets.VM_IP }} ansible_user=${{ fromJSON(secrets.VM_CREDENTIALS).vmUser }} ansible_ssh_pass=${{ fromJSON(secrets.VM_CREDENTIALS).vmPassword }}" > ansible/inventory.ini
+        run: echo "[vm]\n${{ variables.VM_IP }} ansible_user=${{ fromJSON(secrets.VM_CREDENTIALS).vmUser }} ansible_ssh_pass=${{ fromJSON(secrets.VM_CREDENTIALS).vmPassword }}" > ansible/inventory.ini
         env:
-          VM_IP: ${{ secrets.VM_IP }}
+          VM_IP: ${{ variables.VM_IP }}
       - name: Run Ansible Playbook
         run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
         env:
