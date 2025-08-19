@@ -3,20 +3,20 @@ services:
   postgres:
     image: postgres:16
     environment:
-      POSTGRES_DB: {{ postgres_db }}
-      POSTGRES_USER: {{ postgres_user }}
-      POSTGRES_PASSWORD: {{ postgres_password }}
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     volumes:
       - pgdata:/var/lib/postgresql/data
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.2
     environment:
-      KC_DB: {{ postgres_db }}
+      KC_DB: $POSTGRES_DB
       KC_DB_URL: jdbc:postgresql://postgres/keycloak
-      KC_DB_USERNAME: {{ postgres_user }}
-      KC_DB_PASSWORD: {{ postgres_password }}
-      KEYCLOAK_ADMIN: {{ keycloak_admin_user }}
-      KEYCLOAK_ADMIN_PASSWORD: {{ keycloak_admin_password }}
+      KC_DB_USERNAME: $POSTGRES_USER
+      KC_DB_PASSWORD: $POSTGRES_PASSWORD
+      KEYCLOAK_ADMIN: $KEYCLOAK_ADMIN
+      KEYCLOAK_ADMIN_PASSWORD: $KEYCLOAK_ADMIN_PASSWORD
       KC_HTTP_ENABLED: true
     ports:
       - "8080:8080"
@@ -32,9 +32,9 @@ services:
   oauth2-proxy:
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.12.0
     environment:
-      CLIENT_SECRET: {{ client_secret }}
-      VM_IP: {{ vm_ip }}
-      COOKIE_SECRET: {{ cookie_secret }}
+      CLIENT_SECRET: $CLIENT_SECRET
+      VM_IP: $VM_IP
+      COOKIE_SECRET: $COOKIE_SECRET
     command:
       - --provider=keycloak-oidc
       - --client-id=nginx-client  ### Configured in Keycloak
