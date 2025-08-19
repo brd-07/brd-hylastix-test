@@ -43,25 +43,22 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install Ansible
         run: sudo apt update && sudo apt install ansible -y
-      - name: Set Ansible Secrets
-        run: |
-          echo "${{ secrets.ANSIBLE_SECRETS }}" > ansible_secrets.json
       - name: Update Inventory
         run: echo "[vm]\n${{ fromJSON(secrets.ANSIBLE_SECRETS).vmIp }} ansible_user=${{ fromJSON(secrets.VM_CREDENTIALS).vmUser }} ansible_ssh_pass=${{ fromJSON(secrets.VM_CREDENTIALS).vmPassword }}" > ansible/inventory.ini
         env:
-          VM_IP: ${{ fromJSON(secrets.ANSIBLE_SECRETS).vmIp }}
+          VM_IP: ${{ secrets.VM_IP }}
       - name: Run Ansible Playbook
         run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
         env:
-          POSTGRES_DB: ${{ fromJSON(secrets.ANSIBLE_SECRETS).postgresDb }}
-          POSTGRES_USER: ${{ fromJSON(secrets.ANSIBLE_SECRETS).postgresUser }}
-          POSTGRES_PASSWORD: ${{ fromJSON(secrets.ANSIBLE_SECRETS).postgresPassword }}
-          KC_DB: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcDb }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          KC_DB: ${{ secrets.KC_DB }}
           KC_DB_URL: jdbc:postgresql://postgres/keycloak
-          KC_DB_USERNAME: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcUser }}
-          KC_DB_PASSWORD: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcPassword }}
-          KEYCLOAK_ADMIN: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcAdmin }}
-          KEYCLOAK_ADMIN_PASSWORD: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcAdminPassword }}
-          VM_IP: ${{ fromJSON(secrets.ANSIBLE_SECRETS).vmIp }}
-          CLIENT_SECRET: ${{ fromJSON(secrets.ANSIBLE_SECRETS).clientSecret }}
-          COOKIE_SECRET: ${{ fromJSON(secrets.ANSIBLE_SECRETS).cookieSecret }}
+          KC_DB_USERNAME: ${{ secrets.KC_DB_USERNAME }}
+          KC_DB_PASSWORD: ${{ secrets.KC_DB_PASSWORD }}
+          KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
+          KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+          VM_IP: ${{ secrets.VM_IP }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
