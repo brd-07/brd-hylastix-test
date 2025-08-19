@@ -51,7 +51,7 @@ jobs:
           POSTGRES_DB: ${{ fromJSON(secrets.ANSIBLE_SECRETS).postgresDb }}
           POSTGRES_USER: ${{ fromJSON(secrets.ANSIBLE_SECRETS).postgresUser }}
           POSTGRES_PASSWORD: ${{ fromJSON(secrets.ANSIBLE_SECRETS).postgresPassword }}
-	        KC_DB: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcDb }}
+          KC_DB: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcDb }}
           KC_DB_URL: jdbc:postgresql://postgres/keycloak
           KC_DB_USERNAME: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcUser }}
           KC_DB_PASSWORD: ${{ fromJSON(secrets.ANSIBLE_SECRETS).kcPassword }}
