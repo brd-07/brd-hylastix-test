@@ -44,11 +44,11 @@ jobs:
       - name: Install Ansible
         run: sudo apt update && sudo apt install ansible -y
       - name: Update Inventory
-        run: echo "[vm]\n4.225.169.223 ansible_user=${{ fromJSON(secrets.VM_CREDENTIALS).vmUser }} ansible_ssh_pass=${{ fromJSON(secrets.VM_CREDENTIALS).vmPassword }}" > inventory.ini
+        run: echo "[vm]\n4.225.169.223 ansible_user=${{ fromJSON(secrets.VM_CREDENTIALS).vmUser }} ansible_ssh_pass=${{ fromJSON(secrets.VM_CREDENTIALS).vmPassword }}" > ansible/inventory.ini
         env:
           VM_IP: ${{ vars.VM_IP }}
       - name: Run Ansible Playbook
-        run: ansible-playbook -i inventory.ini playbook.yml
+        run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
         env:
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
