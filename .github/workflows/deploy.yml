@@ -48,19 +48,16 @@ jobs:
         env:
           VM_IP: ${{ vars.VM_IP }}
       - name: Run Ansible Playbook
-        run: |
-          export ANSIBLE_HOST_KEY_CHECKING=False
-          ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
         env:
+        # Pass GitHub secrets as environment variables
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          KC_DB: ${{ secrets.KC_DB }}
-          KC_DB_URL: jdbc:postgresql://postgres/keycloak
-          KC_DB_USERNAME: ${{ secrets.KC_DB_USERNAME }}
-          KC_DB_PASSWORD: ${{ secrets.KC_DB_PASSWORD }}
-          KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
+          KEYCLOAK_ADMIN_USER: ${{ secrets.KEYCLOAK_ADMIN_USER }}
           KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
-          VM_IP: 4.225.169.223
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+          VM_IP: ${{ vars.VM_IP }}
+        run: |
+          export ANSIBLE_HOST_KEY_CHECKING=False
+          ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
